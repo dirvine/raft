@@ -475,7 +475,6 @@
 <span id="433">433</span>
 <span id="434">434</span>
 <span id="435">435</span>
-<span id="436">436</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;raft&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span><span class='op'>=</span><span class='string'>&quot;lib&quot;</span>]</span>
@@ -756,6 +755,9 @@
         });
         (<span class='ident'>client_in</span>, <span class='ident'>client_out</span>)
     }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lookup</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
+        <span class='self'>self</span>.<span class='ident'>nodes</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>index</span>)
+    }
 }
 
 <span class='doccomment'>/// The RPC calls required by the Raft protocol.</span>
@@ -794,18 +796,14 @@
 }
 
 <span class='doccomment'>/// Data interchange format for RPC responses.</span>
-<span class='doccomment'>/// * `VoteAccepted` and `EntriesAccepted` mean that it worked.</span>
-<span class='doccomment'>/// * `VoteRejected` means that `rpc.term &lt; node.persistent_state.current_term`. The caller should</span>
-<span class='doccomment'>/// follow the `current_leader` it is directed to.</span>
-<span class='doccomment'>/// * `EntriesRejected` means that either `rpc.term &lt; node.persistent_state.current_term` or if the</span>
+<span class='doccomment'>/// * `Accepted` mean that it worked.</span>
+<span class='doccomment'>/// * `Rejected` means that `rpc.term &lt; node.persistent_state.current_term` or if the</span>
 <span class='doccomment'>/// Node&#39;s `log` doesn&#39;t contain the entry at `rpc.prev_log_index` that maches `prev_log_term`.</span>
-<span class='doccomment'>/// TODO: Can we make this just `Accepted` or `Rejected(term, leader)`?</span>
+<span class='doccomment'>/// The caller should follow the `current_leader` it is directed to.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>, <span class='ident'>Debug</span>, <span class='ident'>Copy</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>RemoteProcedureResponse</span> {
-    <span class='ident'>VoteAccepted</span> { <span class='ident'>term</span>: <span class='ident'>u64</span> },
-    <span class='ident'>VoteRejected</span> { <span class='ident'>term</span>: <span class='ident'>u64</span>, <span class='ident'>current_leader</span>: <span class='ident'>u64</span> },
-    <span class='ident'>EntriesAccepted</span> { <span class='ident'>term</span>: <span class='ident'>u64</span> },
-    <span class='ident'>EntriesRejected</span> { <span class='ident'>term</span>: <span class='ident'>u64</span> },
+    <span class='ident'>Accepted</span> { <span class='ident'>term</span>: <span class='ident'>u64</span> },
+    <span class='ident'>Rejected</span> { <span class='ident'>term</span>: <span class='ident'>u64</span>, <span class='ident'>current_leader</span>: <span class='ident'>u64</span> },
 }
 
 <span class='doccomment'>/// Data interchange request format for Client &lt;-&gt; Node Communication.</span>

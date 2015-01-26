@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>raft</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/raft/lib.rs.html#1-436'>[src]</a></span></h1>
+        </span><a id='src-0' href='../src/raft/lib.rs.html#1-435'>[src]</a></span></h1>
 <h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr>
@@ -120,12 +120,10 @@ descriptions.</p>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.RemoteProcedureResponse.html'
                                title='raft::RemoteProcedureResponse'>RemoteProcedureResponse</a></td>
                         <td class='docblock short'><p>Data interchange format for RPC responses.
-* <code>VoteAccepted</code> and <code>EntriesAccepted</code> mean that it worked.
-* <code>VoteRejected</code> means that <code>rpc.term &lt; node.persistent_state.current_term</code>. The caller should
-follow the <code>current_leader</code> it is directed to.
-* <code>EntriesRejected</code> means that either <code>rpc.term &lt; node.persistent_state.current_term</code> or if the
+* <code>Accepted</code> mean that it worked.
+* <code>Rejected</code> means that <code>rpc.term &lt; node.persistent_state.current_term</code> or if the
 Node&#39;s <code>log</code> doesn&#39;t contain the entry at <code>rpc.prev_log_index</code> that maches <code>prev_log_term</code>.
-TODO: Can we make this just <code>Accepted</code> or <code>Rejected(term, leader)</code>?</p>
+The caller should follow the <code>current_leader</code> it is directed to.</p>
 </td>
                     </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>

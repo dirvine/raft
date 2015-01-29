@@ -452,90 +452,26 @@
 <span id="410">410</span>
 <span id="411">411</span>
 <span id="412">412</span>
-<span id="413">413</span>
-<span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
-<span id="435">435</span>
-<span id="436">436</span>
-<span id="437">437</span>
-<span id="438">438</span>
-<span id="439">439</span>
-<span id="440">440</span>
-<span id="441">441</span>
-<span id="442">442</span>
-<span id="443">443</span>
-<span id="444">444</span>
-<span id="445">445</span>
-<span id="446">446</span>
-<span id="447">447</span>
-<span id="448">448</span>
-<span id="449">449</span>
-<span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span> <span class='op'>=</span> <span class='string'>&quot;raft&quot;</span>]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_type</span><span class='op'>=</span><span class='string'>&quot;lib&quot;</span>]</span>
 
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>unstable</span>)]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='string'>&quot;rustc-serialize&quot;</span> <span class='kw'>as</span> <span class='ident'>rustc_serialize</span>;
+<span class='kw'>mod</span> <span class='ident'>interchange</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>net</span>::<span class='ident'>ip</span>::<span class='ident'>SocketAddr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>net</span>::<span class='ident'>udp</span>::<span class='ident'>UdpSocket</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>timer</span>::<span class='ident'>Timer</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>old_io</span>::<span class='ident'>net</span>::<span class='ident'>ip</span>::<span class='ident'>SocketAddr</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>old_io</span>::<span class='ident'>net</span>::<span class='ident'>udp</span>::<span class='ident'>UdpSocket</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>old_io</span>::<span class='ident'>timer</span>::<span class='ident'>Timer</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>::<span class='ident'>Duration</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>::<span class='ident'>Thread</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>rand</span>::{<span class='ident'>thread_rng</span>, <span class='ident'>Rng</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::{<span class='ident'>channel</span>, <span class='ident'>Sender</span>, <span class='ident'>Receiver</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>;
-<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::{<span class='ident'>json</span>, <span class='ident'>Encodable</span>, <span class='ident'>Decodable</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
+<span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::{<span class='ident'>json</span>, <span class='ident'>Encodable</span>, <span class='ident'>Decodable</span>};
 
-<span class='kw'>use</span> <span class='ident'>RemoteProcedureCall</span>::{<span class='ident'>AppendEntries</span>, <span class='ident'>RequestVote</span>};
-<span class='kw'>use</span> <span class='ident'>RemoteProcedureResponse</span>::{<span class='ident'>Accepted</span>, <span class='ident'>Rejected</span>};
+<span class='kw'>use</span> <span class='ident'>interchange</span>::{<span class='ident'>RemoteProcedureCall</span>, <span class='ident'>RemoteProcedureResponse</span>, <span class='ident'>ClientRequest</span>, <span class='ident'>ClientResponse</span>};
 <span class='kw'>use</span> <span class='ident'>NodeState</span>::{<span class='ident'>Leader</span>, <span class='ident'>Follower</span>, <span class='ident'>Candidate</span>};
 
 <span class='comment'>// The maximum size of the read buffer.</span>
@@ -582,15 +518,15 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// ```</span>
 <span class='doccomment'>/// use raft::RaftNode;</span>
-<span class='doccomment'>/// use std::io::net::ip::SocketAddr;</span>
-<span class='doccomment'>/// use std::io::net::ip::IpAddr::Ipv4Addr;</span>
+<span class='doccomment'>/// use std::old_io::net::ip::SocketAddr;</span>
+<span class='doccomment'>/// use std::old_io::net::ip::IpAddr::Ipv4Addr;</span>
 <span class='doccomment'>/// use std::collections::HashMap;</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// let mut nodes = HashMap::new();</span>
 <span class='doccomment'>/// nodes.insert(1, SocketAddr { ip: Ipv4Addr(127, 0, 0, 1), port: 11111 });</span>
 <span class='doccomment'>/// nodes.insert(2, SocketAddr { ip: Ipv4Addr(127, 0, 0, 1), port: 11112 });</span>
 <span class='doccomment'>/// // Create the nodes.</span>
-<span class='doccomment'>/// let send_node = RaftNode::&lt;String&gt;::new(1, nodes.clone());</span>
+<span class='doccomment'>/// let node = RaftNode::&lt;String&gt;::new(1, nodes.clone());</span>
 <span class='doccomment'>/// ```</span>
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Encodable</span> <span class='op'>+</span> <span class='ident'>Decodable</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>Clone</span><span class='op'>&gt;</span> <span class='ident'>RaftNode</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Creates a new RaftNode with the neighbors specified. `id` should be a valid index into</span>
@@ -650,13 +586,21 @@
                                     .<span class='ident'>unwrap</span>();
                                 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>rpc</span>) <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>decode</span>::<span class='op'>&lt;</span><span class='ident'>RemoteProcedureCall</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>(<span class='ident'>data</span>) {
                                     <span class='kw'>match</span> <span class='ident'>rpc</span> {
-                                        <span class='ident'>RequestVote</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
-                                        <span class='ident'>AppendEntries</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureCall</span>::<span class='ident'>RequestVote</span> {
+                                            .. <span class='comment'>// We don&#39;t care what they&#39;re sending. We&#39;re leading.</span>
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureCall</span>::<span class='ident'>AppendEntries</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
                                     }
                                 } <span class='kw'>else</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>rpr</span>) <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>decode</span>::<span class='op'>&lt;</span><span class='ident'>RemoteProcedureResponse</span><span class='op'>&gt;</span>(<span class='ident'>data</span>) {
                                     <span class='kw'>match</span> <span class='ident'>rpr</span> {
-                                        <span class='ident'>Accepted</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
-                                        <span class='ident'>Rejected</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureResponse</span>::<span class='ident'>Accepted</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureResponse</span>::<span class='ident'>Rejected</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
                                     }
                                 }
                             },
@@ -698,10 +642,16 @@
                                     .<span class='ident'>unwrap</span>();
                                 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>rpc</span>) <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>decode</span>::<span class='op'>&lt;</span><span class='ident'>RemoteProcedureCall</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>(<span class='ident'>data</span>) {
                                     <span class='kw'>match</span> <span class='ident'>rpc</span> {
-                                        <span class='ident'>RequestVote</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
-                                        <span class='ident'>AppendEntries</span> { <span class='ident'>entries</span>: <span class='kw-2'>mut</span> <span class='ident'>entries</span>, <span class='ident'>prev_log_index</span>: <span class='kw-2'>mut</span> <span class='ident'>idx</span>, .. } <span class='op'>=&gt;</span> {
+                                        <span class='ident'>RemoteProcedureCall</span>::<span class='ident'>RequestVote</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureCall</span>::<span class='ident'>AppendEntries</span> {
+                                            <span class='ident'>entries</span>: <span class='kw-2'>mut</span> <span class='ident'>entries</span>,
+                                            <span class='ident'>prev_log_index</span>: <span class='kw-2'>mut</span> <span class='ident'>idx</span>,
+                                            ..
+                                        } <span class='op'>=&gt;</span> {
                                             <span class='comment'>// TODO: Log data properly.</span>
-                                            <span class='ident'>node_in</span>.<span class='ident'>send</span>(<span class='ident'>ClientResponse</span>::<span class='ident'>Accepted</span> { 
+                                            <span class='ident'>node_in</span>.<span class='ident'>send</span>(<span class='ident'>ClientResponse</span>::<span class='ident'>Accepted</span> {
                                                 <span class='ident'>entries</span>: <span class='ident'>entries</span>.<span class='ident'>clone</span>(),
                                                 <span class='ident'>last_index</span>: <span class='ident'>idx</span>,
                                             });
@@ -709,8 +659,12 @@
                                     }
                                 } <span class='kw'>else</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>rpr</span>) <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>decode</span>::<span class='op'>&lt;</span><span class='ident'>RemoteProcedureResponse</span><span class='op'>&gt;</span>(<span class='ident'>data</span>) {
                                     <span class='kw'>match</span> <span class='ident'>rpr</span> {
-                                        <span class='ident'>Accepted</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
-                                        <span class='ident'>Rejected</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureResponse</span>::<span class='ident'>Accepted</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureResponse</span>::<span class='ident'>Rejected</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
                                     }
                                 }
                             },
@@ -726,7 +680,7 @@
                                     },
                                     <span class='ident'>ClientRequest</span>::<span class='ident'>AppendEntries</span> { <span class='ident'>entries</span>: <span class='kw-2'>mut</span> <span class='ident'>entries</span>, .. } <span class='op'>=&gt;</span> {
                                         <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Sending things!&quot;</span>);
-                                        <span class='kw'>let</span> <span class='ident'>rpc</span> <span class='op'>=</span> <span class='ident'>AppendEntries</span> {
+                                        <span class='kw'>let</span> <span class='ident'>rpc</span> <span class='op'>=</span> <span class='ident'>RemoteProcedureCall</span>::<span class='ident'>AppendEntries</span> {
                                             <span class='ident'>term</span>: <span class='number'>0</span>,
                                             <span class='ident'>leader_id</span>: <span class='number'>0</span>,
                                             <span class='ident'>prev_log_index</span>: <span class='number'>0</span>,
@@ -750,7 +704,7 @@
                         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>heartbeat</span>.<span class='ident'>try_recv</span>() {
                             <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> {                  <span class='comment'>// Timer has fired.</span>
                                 <span class='comment'>// This means we haven&#39;t heard from the Leader! It&#39;s probably time</span>
-                                <span class='comment'>// to start an campaign and become a `Candidate`. We&#39;ll either </span>
+                                <span class='comment'>// to start an campaign and become a `Candidate`. We&#39;ll either</span>
                                 <span class='comment'>// hear back that there is a`Leader`, or get enough votes to become one.</span>
                                 <span class='macro'>unimplemented</span><span class='macro'>!</span>()
 
@@ -771,7 +725,7 @@
                                 <span class='comment'>// someone thinks we&#39;re the `Leader`. (Because in this</span>
                                 <span class='comment'>// implementation we&#39;re allowing Followers to relay AppendEntries</span>
                                 <span class='comment'>// from their client programs.)</span>
-                                <span class='comment'>// </span>
+                                <span class='comment'>//</span>
                                 <span class='comment'>// If we recieve a `RemoteProcedureCall::RequestVote` it means</span>
                                 <span class='comment'>// there is another `Candidate` campaigning.</span>
                                 <span class='comment'>// TODO</span>
@@ -779,13 +733,24 @@
                                     .<span class='ident'>unwrap</span>();
                                 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>rpc</span>) <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>decode</span>::<span class='op'>&lt;</span><span class='ident'>RemoteProcedureCall</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>(<span class='ident'>data</span>) {
                                     <span class='kw'>match</span> <span class='ident'>rpc</span> {
-                                        <span class='ident'>RequestVote</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
-                                        <span class='ident'>AppendEntries</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureCall</span>::<span class='ident'>RequestVote</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureCall</span>::<span class='ident'>AppendEntries</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
                                     }
                                 } <span class='kw'>else</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>(<span class='ident'>rpr</span>) <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>decode</span>::<span class='op'>&lt;</span><span class='ident'>RemoteProcedureResponse</span><span class='op'>&gt;</span>(<span class='ident'>data</span>) {
+                                    <span class='comment'>// TODO: Is it possible we&#39;ll recieve something we didn&#39;t</span>
+                                    <span class='comment'>// expect? Might an `Accepted` come when we ask the leader to</span>
+                                    <span class='comment'>// append something?</span>
                                     <span class='kw'>match</span> <span class='ident'>rpr</span> {
-                                        <span class='ident'>Accepted</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
-                                        <span class='ident'>Rejected</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureResponse</span>::<span class='ident'>Accepted</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
+                                        <span class='ident'>RemoteProcedureResponse</span>::<span class='ident'>Rejected</span> {
+                                            ..
+                                        } <span class='op'>=&gt;</span> <span class='macro'>unimplemented</span><span class='macro'>!</span>(),
                                     }
                                 }
                             },
@@ -818,7 +783,7 @@
         (<span class='ident'>client_in</span>, <span class='ident'>client_out</span>)
     }
     <span class='doccomment'>/// A lookup for index -&gt; SocketAddr</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>lookup</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>lookup</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>index</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>nodes</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>index</span>)
     }
     <span class='doccomment'>/// When a `Follower`&#39;s heartbeat times out it&#39;s time to start a campaign for election and</span>
@@ -837,6 +802,15 @@
             <span class='comment'>// We rely on the loop to handle incoming responses regarding `RequestVote`, don&#39;t worry</span>
             <span class='comment'>// about that here.</span>
     }
+    <span class='kw'>fn</span> <span class='ident'>follower_handler</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
+
+    }
+    <span class='kw'>fn</span> <span class='ident'>candidate_handler</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
+
+    }
+    <span class='kw'>fn</span> <span class='ident'>leader_handler</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
+
+    }
 
 }
 
@@ -853,66 +827,6 @@
                     <span class='ident'>last_log_term</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> (<span class='ident'>u64</span>, <span class='ident'>bool</span>) {
         (<span class='number'>0</span>, <span class='boolval'>false</span>) <span class='comment'>// TODO: Implement</span>
     }
-}
-
-<span class='doccomment'>/// Data interchange format for RPC calls. These should match directly to the Raft paper&#39;s RPC</span>
-<span class='doccomment'>/// descriptions.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>, <span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>RemoteProcedureCall</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='ident'>AppendEntries</span> {
-        <span class='ident'>term</span>: <span class='ident'>u64</span>,
-        <span class='ident'>leader_id</span>: <span class='ident'>u64</span>,
-        <span class='ident'>prev_log_index</span>: <span class='ident'>u64</span>,
-        <span class='ident'>prev_log_term</span>: <span class='ident'>T</span>,
-        <span class='ident'>entries</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
-        <span class='ident'>leader_commit</span>: <span class='ident'>u64</span>,
-    },
-    <span class='ident'>RequestVote</span> {
-        <span class='ident'>term</span>: <span class='ident'>u64</span>,
-        <span class='ident'>candidate_id</span>: <span class='ident'>u64</span>,
-        <span class='ident'>last_log_index</span>: <span class='ident'>u64</span>,
-        <span class='ident'>last_log_term</span>: <span class='ident'>u64</span>,
-    },
-}
-
-<span class='doccomment'>/// Data interchange format for RPC responses.</span>
-<span class='doccomment'>/// * `Accepted` mean that it worked.</span>
-<span class='doccomment'>/// * `Rejected` means that `rpc.term &lt; node.persistent_state.current_term` or if the</span>
-<span class='doccomment'>/// Node&#39;s `log` doesn&#39;t contain the entry at `rpc.prev_log_index` that maches `prev_log_term`.</span>
-<span class='doccomment'>/// The caller should follow the `current_leader` it is directed to.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>RustcEncodable</span>, <span class='ident'>RustcDecodable</span>, <span class='ident'>Debug</span>, <span class='ident'>Copy</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>RemoteProcedureResponse</span> {
-    <span class='ident'>Accepted</span> { <span class='ident'>term</span>: <span class='ident'>u64</span> },
-    <span class='ident'>Rejected</span> { <span class='ident'>term</span>: <span class='ident'>u64</span>, <span class='ident'>current_leader</span>: <span class='ident'>u64</span> },
-}
-
-<span class='doccomment'>/// Data interchange request format for Client &lt;-&gt; Node Communication.</span>
-<span class='doccomment'>/// Each variant of this is a command which can be asked of the `RaftNode` after it is spun up with</span>
-<span class='doccomment'>/// `node.spinup()` The node attached to this application will poll it&#39;s channel regularly and</span>
-<span class='doccomment'>/// return results on the channel.</span>
-<span class='doccomment'>/// If you&#39;re wondering where vote requesting is, it&#39;s hidden within the module.</span>
-<span class='doccomment'>/// TODO: Currently requests are not queued or gaurenteed to serviced in order. This is probably a</span>
-<span class='doccomment'>/// bad thing as most clients will `.send()` then `.recv()`. We can probably make a service queue for this.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>ClientRequest</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Gets the log entries from start to end.</span>
-    <span class='ident'>IndexRange</span> { <span class='ident'>start_index</span>: <span class='ident'>u64</span>, <span class='ident'>end_index</span>: <span class='ident'>u64</span> },
-    <span class='doccomment'>/// Asks the node to append an entry after a given entry.</span>
-    <span class='doccomment'>/// TODO: This interface might be bad.</span>
-    <span class='ident'>AppendEntries</span> { <span class='ident'>prev_log_index</span>: <span class='ident'>u64</span>, <span class='ident'>prev_log_term</span>: <span class='ident'>T</span>, <span class='ident'>entries</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> },
-}
-
-<span class='doccomment'>/// Data interchange response format for Client &lt;-&gt; Node communication.</span>
-<span class='doccomment'>/// Each variant of this is a response to a `ClientRequest`.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>ClientResponse</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Returns the entries requested as well as the index of the last item (thus the rest can be</span>
-    <span class='doccomment'>/// trivially calculated.) Note this will only return entries that have been commited by the</span>
-    <span class='doccomment'>/// majority of nodes, and will not necessarily reflect the most up to date information.</span>
-    <span class='ident'>Accepted</span> { <span class='ident'>entries</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>last_index</span>: <span class='ident'>u64</span> },
-    <span class='doccomment'>/// Returns the reason why it failed.</span>
-    <span class='doccomment'>/// TODO: This probably shouldn&#39;t be a string.</span>
-    <span class='ident'>Rejected</span> { <span class='ident'>reason</span>: <span class='ident'>String</span> },
 }
 
 <span class='doccomment'>/// Nodes can either be:</span>
@@ -950,48 +864,6 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>LeaderState</span> {
     <span class='ident'>next_index</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>,
     <span class='ident'>match_index</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u64</span><span class='op'>&gt;</span>
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>net</span>::<span class='ident'>ip</span>::<span class='ident'>SocketAddr</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>net</span>::<span class='ident'>udp</span>::<span class='ident'>UdpSocket</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>net</span>::<span class='ident'>ip</span>::<span class='ident'>IpAddr</span>::<span class='ident'>Ipv4Addr</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>thread</span>::<span class='ident'>Thread</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
-    <span class='kw'>use</span> <span class='ident'>rustc_serialize</span>::<span class='ident'>json</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>::{<span class='ident'>channel</span>, <span class='ident'>Sender</span>, <span class='ident'>Receiver</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>str</span>;
-    <span class='kw'>use</span> <span class='ident'>super</span>::<span class='op'>*</span>;
-
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>basic_test</span>() {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>nodes</span> <span class='op'>=</span> <span class='ident'>HashMap</span>::<span class='ident'>new</span>();
-        <span class='ident'>nodes</span>.<span class='ident'>insert</span>(<span class='number'>1</span>, <span class='ident'>SocketAddr</span> { <span class='ident'>ip</span>: <span class='ident'>Ipv4Addr</span>(<span class='number'>127</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>), <span class='ident'>port</span>: <span class='number'>11111</span> });
-        <span class='ident'>nodes</span>.<span class='ident'>insert</span>(<span class='number'>2</span>, <span class='ident'>SocketAddr</span> { <span class='ident'>ip</span>: <span class='ident'>Ipv4Addr</span>(<span class='number'>127</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>1</span>), <span class='ident'>port</span>: <span class='number'>11112</span> });
-        <span class='comment'>// Create the nodes.</span>
-        <span class='kw'>let</span> <span class='ident'>send_node</span> <span class='op'>=</span> <span class='ident'>RaftNode</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>::<span class='ident'>new</span>(<span class='number'>1</span>, <span class='ident'>nodes</span>.<span class='ident'>clone</span>());
-        <span class='kw'>let</span> <span class='ident'>recieve_node</span> <span class='op'>=</span> <span class='ident'>RaftNode</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>::<span class='ident'>new</span>(<span class='number'>2</span>, <span class='ident'>nodes</span>.<span class='ident'>clone</span>());
-        <span class='comment'>// Start up the node.</span>
-        <span class='kw'>let</span> (_, <span class='ident'>log_reciever</span>) <span class='op'>=</span> <span class='ident'>recieve_node</span>.<span class='ident'>spinup</span>();
-        <span class='kw'>let</span> (<span class='ident'>log_sender</span>, _) <span class='op'>=</span> <span class='ident'>send_node</span>.<span class='ident'>spinup</span>();
-        <span class='comment'>// Make a test send to that port.</span>
-        <span class='kw'>let</span> <span class='ident'>test_command</span> <span class='op'>=</span> <span class='ident'>ClientRequest</span>::<span class='ident'>AppendEntries</span> {
-            <span class='ident'>entries</span>: <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_string</span>()],
-            <span class='ident'>prev_log_index</span>: <span class='number'>0</span>,
-            <span class='ident'>prev_log_term</span>: <span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_string</span>(),
-        };
-        <span class='ident'>log_sender</span>.<span class='ident'>send</span>(<span class='ident'>test_command</span>.<span class='ident'>clone</span>()).<span class='ident'>unwrap</span>();
-        <span class='comment'>// Get the result.</span>
-        <span class='kw'>let</span> <span class='ident'>event</span> <span class='op'>=</span> <span class='ident'>log_reciever</span>.<span class='ident'>recv</span>().<span class='ident'>unwrap</span>();
-        <span class='kw'>match</span> <span class='ident'>event</span> {
-            <span class='ident'>ClientResponse</span>::<span class='ident'>Accepted</span> { <span class='ident'>entries</span>: <span class='ident'>entries</span>, .. } <span class='op'>=&gt;</span> {
-                <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>entries</span>, <span class='macro'>vec</span><span class='macro'>!</span>[<span class='string'>&quot;foo&quot;</span>.<span class='ident'>to_string</span>()]);
-            },
-            _ <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Didn&#39;t return the right thing&quot;</span>),
-        }
-    }
-
 }
 </pre>
 </section>

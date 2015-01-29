@@ -44,7 +44,7 @@
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>raft</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/raft/lib.rs.html#1-476'>[src]</a></span></h1>
+        </span><a id='src-0' href='../src/raft/lib.rs.html#1-412'>[src]</a></span></h1>
 <h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr>
@@ -81,49 +81,9 @@ state (which must be carefully stored and kept safe).</p>
                 </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                     <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.ClientRequest.html'
-                               title='raft::ClientRequest'>ClientRequest</a></td>
-                        <td class='docblock short'><p>Data interchange request format for Client &lt;-&gt; Node Communication.
-Each variant of this is a command which can be asked of the <code>RaftNode</code> after it is spun up with
-<code>node.spinup()</code> The node attached to this application will poll it&#39;s channel regularly and
-return results on the channel.
-If you&#39;re wondering where vote requesting is, it&#39;s hidden within the module.
-TODO: Currently requests are not queued or gaurenteed to serviced in order. This is probably a
-bad thing as most clients will <code>.send()</code> then <code>.recv()</code>. We can probably make a service queue for this.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.ClientResponse.html'
-                               title='raft::ClientResponse'>ClientResponse</a></td>
-                        <td class='docblock short'><p>Data interchange response format for Client &lt;-&gt; Node communication.
-Each variant of this is a response to a <code>ClientRequest</code>.</p>
-</td>
-                    </tr>
-                
-                    <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.NodeState.html'
                                title='raft::NodeState'>NodeState</a></td>
                         <td class='docblock short'><p>Nodes can either be:</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.RemoteProcedureCall.html'
-                               title='raft::RemoteProcedureCall'>RemoteProcedureCall</a></td>
-                        <td class='docblock short'><p>Data interchange format for RPC calls. These should match directly to the Raft paper&#39;s RPC
-descriptions.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.RemoteProcedureResponse.html'
-                               title='raft::RemoteProcedureResponse'>RemoteProcedureResponse</a></td>
-                        <td class='docblock short'><p>Data interchange format for RPC responses.
-* <code>Accepted</code> mean that it worked.
-* <code>Rejected</code> means that <code>rpc.term &lt; node.persistent_state.current_term</code> or if the
-Node&#39;s <code>log</code> doesn&#39;t contain the entry at <code>rpc.prev_log_index</code> that maches <code>prev_log_term</code>.
-The caller should follow the <code>current_leader</code> it is directed to.</p>
 </td>
                     </tr>
                 </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>

@@ -44,8 +44,33 @@
 <h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>raft</a>::<wbr><a class='mod' href=''>interchange</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-5' href='../../src/raft/interchange.rs.html#1-63'>[src]</a></span></h1>
-<h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+        </span><a id='src-5' href='../../src/raft/interchange.rs.html#1-115'>[src]</a></span></h1>
+<h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.AppendEntries.html'
+                               title='raft::interchange::AppendEntries'>AppendEntries</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.AppendRequest.html'
+                               title='raft::interchange::AppendRequest'>AppendRequest</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.IndexRange.html'
+                               title='raft::interchange::IndexRange'>IndexRange</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.RequestVote.html'
+                               title='raft::interchange::RequestVote'>RequestVote</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.ClientRequest.html'
@@ -57,14 +82,6 @@ return results on the channel.
 If you&#39;re wondering where vote requesting is, it&#39;s hidden within the module.
 TODO: Currently requests are not queued or gaurenteed to serviced in order. This is probably a
 bad thing as most clients will <code>.send()</code> then <code>.recv()</code>. We can probably make a service queue for this.</p>
-</td>
-                    </tr>
-                
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='enum' href='enum.ClientResponse.html'
-                               title='raft::interchange::ClientResponse'>ClientResponse</a></td>
-                        <td class='docblock short'><p>Data interchange response format for Client &lt;-&gt; Node communication.
-Each variant of this is a response to a <code>ClientRequest</code>.</p>
 </td>
                     </tr>
                 
